@@ -37,5 +37,21 @@ public class CategoriaServices {
         return categoriaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
     }
+
+    public Categoria alterarCategoria(Categoria categoria){
+        if(categoria.getDescricao() == null){
+            throw new RuntimeException("A descrição da categoria não pode ser nula");
+        }
+
+        if(categoria.getDescricao().length() <= 2){
+            throw new RuntimeException("A descrição da categoria não pode ter menor que 2 caracteres");
+        }
+
+        return categoriaRepository.save(categoria);
+    }
+
+    public void excluirCategoria(UUID id){
+        categoriaRepository.deleteById(id);
+    }
     
 }
