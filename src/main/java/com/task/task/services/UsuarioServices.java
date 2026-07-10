@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.task.task.dtos.usuario.UsuarioResponseDTO;
 import com.task.task.models.Usuario;
 import com.task.task.repositories.UsuarioRepository;
 
@@ -27,8 +28,10 @@ public class UsuarioServices {
         return usuarioRepository.save(usuario);
     }
 
-    public List<Usuario> listaUsuarios(){
-        return usuarioRepository.findAll();
+    public List<UsuarioResponseDTO> listaUsuarios(){
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream().map(u -> new UsuarioResponseDTO(u)).toList();
+
     }
 
     public Usuario buscarUsuarioPorId(UUID id){

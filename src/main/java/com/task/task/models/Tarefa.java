@@ -43,7 +43,6 @@ public class Tarefa {
     private Categoria categoria;
 
     public Tarefa(String titulo, StatusTarefa status, Usuario usuario, Categoria categoria) {
-        this.id = UUID.randomUUID();
         this.titulo = titulo;
         this.status = status;
         this.usuario = usuario;

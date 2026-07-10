@@ -3,30 +3,24 @@ package com.task.task.services;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.task.task.models.Categoria;
 import com.task.task.repositories.CategoriaRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor //Cria um construtor com todos os campos como final
 public class CategoriaServices {
-    @Autowired // Injeção de dependência
-    private CategoriaRepository categoriaRepository;
+    // Injeção de dependência
+    private final CategoriaRepository categoriaRepository;
 
-    @Transactional //Garanto que cso ocorra algum erro, tudo será revertido
+    //@Transactional //Garanto que cso ocorra algum erro, tudo será revertido
     public Categoria salvarCategoria(Categoria categoria){
-        if(categoria.getDescricao() == null){
-            throw new RuntimeException("A descrição da categoria não pode ser nula");
-        }
-
-        if(categoria.getDescricao().length() <= 2){
-            throw new RuntimeException("A descrição da categoria não pode ter menor que 2 caracteres");
-        }
-
-        return categoriaRepository.save(categoria);
+        Categoria categoriaParaSalvar = new Categoria(categoria.getDescricao());
+        return categoriaRepository.save(categoriaParaSalvar);
     }
 
     public List<Categoria> listaCategorias(){
@@ -38,6 +32,7 @@ public class CategoriaServices {
             .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
     }
 
+    @Transactional //Garanto que cso ocorra algum erro, tudo será revertido
     public Categoria alterarCategoria(Categoria categoria){
         if(categoria.getDescricao() == null){
             throw new RuntimeException("A descrição da categoria não pode ser nula");
@@ -50,6 +45,7 @@ public class CategoriaServices {
         return categoriaRepository.save(categoria);
     }
 
+    @Transactional //Garanto que cso ocorra algum erro, tudo será revertido
     public void excluirCategoria(UUID id){
         categoriaRepository.deleteById(id);
     }

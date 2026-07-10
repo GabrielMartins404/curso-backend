@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.task.task.dtos.usuario.UsuarioResponseDTO;
 import com.task.task.models.Usuario;
 import com.task.task.services.UsuarioServices;
 
@@ -24,7 +25,7 @@ public class UsuarioController {
     private UsuarioServices usuarioServices;
 
     @GetMapping //GET /usuario
-    public ResponseEntity<List<Usuario>> listarUsuarios(){
+    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
         return ResponseEntity.ok(usuarioServices.listaUsuarios());
     }
 

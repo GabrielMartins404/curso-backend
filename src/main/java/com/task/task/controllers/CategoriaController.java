@@ -23,7 +23,7 @@ public class CategoriaController {
     @Autowired
     private CategoriaServices categoriaServices;
 
-    @GetMapping //GET /categoria
+    @GetMapping("/") //GET /categoria
     public ResponseEntity<List<Categoria>> listarCategorias(){
         return ResponseEntity.ok(categoriaServices.listaCategorias());
     }
@@ -33,7 +33,7 @@ public class CategoriaController {
         return ResponseEntity.ok(categoriaServices.buscarCategoriaPorId(id));
     }
 
-    @PostMapping //POST /categoria
+    @PostMapping("/") //POST /categoria
     public ResponseEntity<Categoria> salvarCategoria(@RequestBody Categoria categoria){
         return ResponseEntity.ok(categoriaServices.salvarCategoria(categoria));
     }
