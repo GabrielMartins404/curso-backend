@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.task.task.models.Tarefa;
+import com.task.task.dtos.tarefa.AlterarStatusTarefaDTO;
+import com.task.task.dtos.tarefa.TarefaRequestDTO;
+import com.task.task.dtos.tarefa.TarefaResponseDTO;
 import com.task.task.services.TarefaServices;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/tarefa")
@@ -24,24 +28,28 @@ public class TarefaController {
     private TarefaServices tarefaServices;
 
     @GetMapping //GET
-    public ResponseEntity<List<Tarefa>> listarTarefas(){
+    public ResponseEntity<List<TarefaResponseDTO>> listarTarefas(){
         return ResponseEntity.ok(tarefaServices.listaTarefas());
     }
 
     @GetMapping("/{id}") //GET /tarefa/{id}
-    public ResponseEntity<Tarefa> buscarTarefaPorId(@PathVariable UUID id){
+    public ResponseEntity<TarefaResponseDTO> buscarTarefaPorId(@PathVariable UUID id){
         return ResponseEntity.ok(tarefaServices.buscarTarefaPorId(id));
     }
 
-    @PostMapping //POST /tarefa
-    public ResponseEntity<Tarefa> salvarTarefa(@RequestBody Tarefa tarefa){
-        return ResponseEntity.ok(tarefaServices.salvarTarefa(tarefa));
+    @PostMapping("/") //POST /tarefa
+    public ResponseEntity<TarefaResponseDTO> salvarTarefa(@Valid @RequestBody TarefaRequestDTO tarefaDTO){
+        return ResponseEntity.ok(tarefaServices.salvarTarefa(tarefaDTO));
     }
 
     @PutMapping("/{id}") //PUT /tarefa/{id}
-    public ResponseEntity<Tarefa> alterarTarefa(@PathVariable UUID id, @RequestBody Tarefa tarefa){
-        tarefa.setId(id);
-        return ResponseEntity.ok(tarefaServices.alterarTarefa(tarefa));
+    public ResponseEntity<TarefaResponseDTO> alterarTarefa(@PathVariable UUID id, @Valid @RequestBody TarefaRequestDTO tarefaDTO){
+        return ResponseEntity.ok(tarefaServices.alterarTarefa(id, tarefaDTO));
+    }
+
+    @PutMapping("/status/{id}") //PUT /tarefa/status/{id}
+    public ResponseEntity<TarefaResponseDTO> alterarStatusTarefa(@PathVariable UUID id, @Valid @RequestBody AlterarStatusTarefaDTO alterarStatusDTO){
+        return ResponseEntity.ok(tarefaServices.alterarStatusTarefa(id, alterarStatusDTO));
     }
 
     @DeleteMapping("/{id}") //DELETE /tarefa/{id}

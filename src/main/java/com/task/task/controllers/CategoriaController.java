@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.task.task.models.Categoria;
+import com.task.task.dtos.categoria.CategoriaRequestDTO;
+import com.task.task.dtos.categoria.CategoriaResponseDTO;
 import com.task.task.services.CategoriaServices;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/categoria")
@@ -24,24 +27,23 @@ public class CategoriaController {
     private CategoriaServices categoriaServices;
 
     @GetMapping("/") //GET /categoria
-    public ResponseEntity<List<Categoria>> listarCategorias(){
+    public ResponseEntity<List<CategoriaResponseDTO>> listarCategorias(){
         return ResponseEntity.ok(categoriaServices.listaCategorias());
     }
 
     @GetMapping("/{id}") //GET /categoria/{id}
-    public ResponseEntity<Categoria> buscarCategoriaPorId(@PathVariable UUID id){
+    public ResponseEntity<CategoriaResponseDTO> buscarCategoriaPorId(@PathVariable UUID id){
         return ResponseEntity.ok(categoriaServices.buscarCategoriaPorId(id));
     }
 
     @PostMapping("/") //POST /categoria
-    public ResponseEntity<Categoria> salvarCategoria(@RequestBody Categoria categoria){
-        return ResponseEntity.ok(categoriaServices.salvarCategoria(categoria));
+    public ResponseEntity<CategoriaResponseDTO> salvarCategoria(@Valid @RequestBody CategoriaRequestDTO dto){
+        return ResponseEntity.ok(categoriaServices.salvarCategoria(dto));
     }
 
     @PutMapping("/{id}") //PUT /categoria/{id}
-    public ResponseEntity<Categoria> alterarCategoria(@PathVariable UUID id, @RequestBody Categoria categoria){
-        categoria.setId(id);
-        return ResponseEntity.ok(categoriaServices.alterarCategoria(categoria));
+    public ResponseEntity<CategoriaResponseDTO> alterarCategoria(@PathVariable UUID id, @Valid @RequestBody CategoriaRequestDTO dto){
+        return ResponseEntity.ok(categoriaServices.alterarCategoria(id, dto));
     }
 
     @DeleteMapping("/{id}") //DELETE /categoria/{id}

@@ -38,14 +38,18 @@ public class Tarefa {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "descricao",nullable = false, columnDefinition = "TEXT")
+    private String descricao;
+
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
-    public Tarefa(String titulo, StatusTarefa status, Usuario usuario, Categoria categoria) {
+    public Tarefa(String titulo, String descricao, Usuario usuario, Categoria categoria) {
         this.titulo = titulo;
-        this.status = status;
+        this.status = StatusTarefa.PENDENTE; //A regra me diz que ao criar uma tarefa, devo inicializa-la como PENDENTE
         this.usuario = usuario;
+        this.descricao = descricao;
         this.categoria = categoria;
     }
 }

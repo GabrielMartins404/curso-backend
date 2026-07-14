@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.task.task.dtos.usuario.UsuarioRequestDTO;
 import com.task.task.dtos.usuario.UsuarioResponseDTO;
-import com.task.task.models.Usuario;
 import com.task.task.services.UsuarioServices;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuario")
@@ -24,25 +26,24 @@ public class UsuarioController {
     @Autowired
     private UsuarioServices usuarioServices;
 
-    @GetMapping //GET /usuario
+    @GetMapping("/") //GET /usuario
     public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
         return ResponseEntity.ok(usuarioServices.listaUsuarios());
     }
 
     @GetMapping("/{id}") //GET /usuario/{id}
-    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable UUID id){
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable UUID id){
         return ResponseEntity.ok(usuarioServices.buscarUsuarioPorId(id));
     }
 
-    @PostMapping //POST /usuario
-    public ResponseEntity<Usuario> salvarUsuario(@RequestBody Usuario usuario){
-        return ResponseEntity.ok(usuarioServices.salvarUsuario(usuario));
+    @PostMapping("/") //POST /usuario
+    public ResponseEntity<UsuarioResponseDTO> salvarUsuario(@Valid @RequestBody UsuarioRequestDTO usuarioDTO){
+        return ResponseEntity.ok(usuarioServices.salvarUsuario(usuarioDTO));
     }
 
     @PutMapping("/{id}") //PUT /usuario/{id}
-    public ResponseEntity<Usuario> alterarUsuario(@PathVariable UUID id, @RequestBody Usuario usuario){
-        usuario.setId(id);
-        return ResponseEntity.ok(usuarioServices.alterarUsuario(usuario));
+    public ResponseEntity<UsuarioResponseDTO> alterarUsuario(@PathVariable UUID id, @Valid @RequestBody UsuarioRequestDTO usuarioDTO){
+        return ResponseEntity.ok(usuarioServices.alterarUsuario(id, usuarioDTO));
     }
 
     @DeleteMapping("/{id}") //DELETE /usuario/{id}

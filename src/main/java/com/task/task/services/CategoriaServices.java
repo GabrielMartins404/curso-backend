@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.task.task.dtos.categoria.CategoriaRequestDTO;
+import com.task.task.dtos.categoria.CategoriaResponseDTO;
 import com.task.task.models.Categoria;
 import com.task.task.repositories.CategoriaRepository;
 
@@ -17,32 +19,32 @@ public class CategoriaServices {
     // Injeção de dependência
     private final CategoriaRepository categoriaRepository;
 
-    //@Transactional //Garanto que cso ocorra algum erro, tudo será revertido
-    public Categoria salvarCategoria(Categoria categoria){
-        Categoria categoriaParaSalvar = new Categoria(categoria.getDescricao());
-        return categoriaRepository.save(categoriaParaSalvar);
+    @Transactional //Garanto que cso ocorra algum erro, tudo será revertido
+    public CategoriaResponseDTO salvarCategoria(CategoriaRequestDTO dto){
+        Categoria categoriaParaSalvar = new Categoria(dto.getDescricao());
+        return new CategoriaResponseDTO(categoriaRepository.save(categoriaParaSalvar));
     }
 
-    public List<Categoria> listaCategorias(){
-        return categoriaRepository.findAll();
+
+    public List<CategoriaResponseDTO> listaCategorias(){
+        return categoriaRepository.findAll().stream()
+            .map(CategoriaResponseDTO::new)
+            .toList();
     }
 
-    public Categoria buscarCategoriaPorId(UUID id){
-        return categoriaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
+    public CategoriaResponseDTO buscarCategoriaPorId(UUID id){
+        return new CategoriaResponseDTO(categoriaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID")));
     }
 
     @Transactional //Garanto que cso ocorra algum erro, tudo será revertido
-    public Categoria alterarCategoria(Categoria categoria){
-        if(categoria.getDescricao() == null){
-            throw new RuntimeException("A descrição da categoria não pode ser nula");
-        }
+    public CategoriaResponseDTO alterarCategoria(UUID id, CategoriaRequestDTO dto){
+        Categoria categoriaParaAlterar = categoriaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
+        
+            categoriaParaAlterar.setDescricao(dto.getDescricao());
 
-        if(categoria.getDescricao().length() <= 2){
-            throw new RuntimeException("A descrição da categoria não pode ter menor que 2 caracteres");
-        }
-
-        return categoriaRepository.save(categoria);
+        return new CategoriaResponseDTO(categoriaRepository.save(categoriaParaAlterar));
     }
 
     @Transactional //Garanto que cso ocorra algum erro, tudo será revertido
