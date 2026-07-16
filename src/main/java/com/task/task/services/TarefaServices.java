@@ -39,7 +39,6 @@ public class TarefaServices {
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
             .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
 
-
         //Criar a tarefa usando o construtor interno. Dentro do construtor, estabeleço as regras necessárias
         Tarefa tarefa = new Tarefa(dto.getTitulo(), dto.getDescricao(),  usuario, categoria);
 
