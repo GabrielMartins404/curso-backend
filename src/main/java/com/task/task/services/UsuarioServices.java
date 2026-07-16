@@ -1,8 +1,9 @@
 package com.task.task.services;
 
-import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +28,8 @@ public class UsuarioServices {
       return new UsuarioResponseDTO(usuario);
     }
 
-    public List<UsuarioResponseDTO> listaUsuarios(){
-        List<Usuario> usuarios = usuarioRepository.findAll();
-        return usuarios.stream().map(u -> new UsuarioResponseDTO(u)).toList();
-
+    public Page<UsuarioResponseDTO> listaUsuarios(Pageable pageable){
+        return usuarioRepository.findAll(pageable).map(UsuarioResponseDTO::new);
     }
 
     public UsuarioResponseDTO buscarUsuarioPorId(UUID id){

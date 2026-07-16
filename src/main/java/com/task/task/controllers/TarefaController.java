@@ -1,9 +1,11 @@
 package com.task.task.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,9 +35,9 @@ public class TarefaController {
     private TarefaServices tarefaServices;
 
     @GetMapping
-    @Operation(summary = "Listar todas as tarefas", description = "Retorna a lista completa de tarefas cadastradas no sistema")
-    public ResponseEntity<List<TarefaResponseDTO>> listarTarefas(){
-        return ResponseEntity.ok(tarefaServices.listaTarefas());
+    @Operation(summary = "Listar todas as tarefas", description = "Retorna uma página de tarefas cadastradas no sistema. Utilize os parâmetros page, size e sort para paginar")
+    public ResponseEntity<Page<TarefaResponseDTO>> listarTarefas(@PageableDefault(size = 10) Pageable pageable){
+        return ResponseEntity.ok(tarefaServices.listaTarefas(pageable));
     }
 
     @GetMapping("/{id}")

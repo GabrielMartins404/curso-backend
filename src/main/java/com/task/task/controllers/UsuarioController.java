@@ -1,9 +1,11 @@
 package com.task.task.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +34,9 @@ public class UsuarioController {
     private UsuarioServices usuarioServices;
 
     @GetMapping("/")
-    @Operation(summary = "Listar todos os usuários", description = "Retorna a lista completa de usuários cadastrados no sistema")
-    public ResponseEntity<List<UsuarioResponseDTO>> listarUsuarios(){
-        return ResponseEntity.ok(usuarioServices.listaUsuarios());
+    @Operation(summary = "Listar todos os usuários", description = "Retorna uma página de usuários cadastrados no sistema. Utilize os parâmetros page, size e sort para paginar")
+    public ResponseEntity<Page<UsuarioResponseDTO>> listarUsuarios(@PageableDefault(size = 10) Pageable pageable){
+        return ResponseEntity.ok(usuarioServices.listaUsuarios(pageable));
     }
 
     @GetMapping("/{id}")

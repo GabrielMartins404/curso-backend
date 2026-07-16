@@ -1,9 +1,11 @@
 package com.task.task.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +34,9 @@ public class CategoriaController {
     private CategoriaServices categoriaServices;
 
     @GetMapping("/")
-    @Operation(summary = "Listar todas as categorias", description = "Retorna a lista completa de categorias cadastradas no sistema")
-    public ResponseEntity<List<CategoriaResponseDTO>> listarCategorias(){
-        return ResponseEntity.ok(categoriaServices.listaCategorias());
+    @Operation(summary = "Listar todas as categorias", description = "Retorna uma página de categorias cadastradas no sistema. Utilize os parâmetros page, size e sort para paginar")
+    public ResponseEntity<Page<CategoriaResponseDTO>> listarCategorias(@PageableDefault(size = 10) Pageable pageable){
+        return ResponseEntity.ok(categoriaServices.listaCategorias(pageable));
     }
 
     @GetMapping("/{id}")
