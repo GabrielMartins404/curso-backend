@@ -21,10 +21,6 @@ public class TarefaRequestDTO {
     @Schema(description = "Descrição detalhada da tarefa (máximo 500 caracteres)", example = "Estudar os módulos de Spring Security e JPA")
     private String descricao;
 
-    @NotNull(message = "O usuario da tarefa não pode ser nulo")
-    @Schema(description = "Identificador do usuário responsável pela tarefa")
-    private UUID usuarioId;
-
     @NotNull(message = "A categoria da tarefa não pode ser nula")
     @Schema(description = "Identificador da categoria da tarefa")
     private UUID categoriaId;

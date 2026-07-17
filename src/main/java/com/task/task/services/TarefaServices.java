@@ -14,7 +14,6 @@ import com.task.task.models.Tarefa;
 import com.task.task.models.Usuario;
 import com.task.task.repositories.CategoriaRepository;
 import com.task.task.repositories.TarefaRepository;
-import com.task.task.repositories.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +22,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TarefaServices {
     private final TarefaRepository tarefaRepository;
-    private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
+    private final UsuarioServices usuarioServices;
 
     @Transactional
     public TarefaResponseDTO salvarTarefa(TarefaRequestDTO dto){
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(() -> new RuntimeException("Não foi possivel localizar usuario por ID"));
+        Usuario usuario = usuarioServices.buscarUsuarioLogado();
 
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
             .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
@@ -43,7 +41,8 @@ public class TarefaServices {
 
     @Transactional
     public Page<TarefaResponseDTO> listaTarefas(Pageable pageable){
-        return tarefaRepository.findAll(pageable).map(TarefaResponseDTO::new);
+        Usuario usuarioLogado = usuarioServices.buscarUsuarioLogado();
+        return tarefaRepository.findByUsuario(usuarioLogado, pageable).map(TarefaResponseDTO::new);
     }
 
     @Transactional
@@ -55,17 +54,15 @@ public class TarefaServices {
 
     @Transactional
     public TarefaResponseDTO alterarTarefa(UUID id, TarefaRequestDTO dto){
+
         Tarefa tarefa = tarefaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Não foi possivel localizar tarefa por ID"));
 
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-            .orElseThrow(() -> new RuntimeException("Não foi possivel localizar usuario por ID"));
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
             .orElseThrow(() -> new RuntimeException("Não foi possivel localizar categoria por ID"));
 
         tarefa.setTitulo(dto.getTitulo());
         tarefa.setDescricao(dto.getDescricao());
-        tarefa.setUsuario(usuario);
         tarefa.setCategoria(categoria);
 
         tarefaRepository.save(tarefa);
